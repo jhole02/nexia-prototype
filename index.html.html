@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEXIA – Prototipo de app móvil</title>
+<style>
+:root{--p:#1265DB;--t:#102B50;--s:#EAF3FF;--bg:#FFFFFF;--ok:#147D52;--err:#C43D3D;--m:#44597A;--line:#C9DAF0;--outer:#D9E6F7;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--outer:#0B1626}}
+:root[data-theme="dark"]{--outer:#0B1626}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--outer);color:var(--t);display:flex;justify-content:center;align-items:center;font-size:16px;line-height:1.4}
+#app{width:100%;max-width:390px;height:min(844px,100%);background:var(--bg);display:flex;flex-direction:column;overflow:hidden;position:relative}
+@media(min-width:431px){#app{border-radius:32px;box-shadow:0 20px 60px rgba(16,43,80,.25)}}
+.scr{flex:1;display:flex;flex-direction:column;min-height:0;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.body{flex:1;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px}
+.top{display:flex;align-items:center;gap:8px;padding:12px 12px 8px}
+.top h1{font-size:18px;margin:0;flex:1}
+.ib{min-width:44px;min-height:44px;border:0;background:var(--s);color:var(--t);border-radius:12px;display:grid;place-items:center;cursor:pointer;font:inherit;font-weight:600}
+button:focus-visible,input:focus-visible,[role=radio]:focus-visible{outline:3px solid var(--t);outline-offset:2px}
+.logo{font-weight:800;letter-spacing:.14em;color:var(--p);font-size:30px}
+.logo.s{font-size:18px}
+.card{background:var(--s);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.card.w{background:var(--bg);border:1px solid var(--line)}
+.card.hero{background:var(--p);color:#fff}
+.lbl{font-size:13px;color:var(--m);font-weight:600}
+.hero .lbl{color:#fff}
+.big{font-size:32px;font-weight:800;margin:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px;background:#fff;color:var(--ok);width:fit-content}
+.badge.e{color:#9E2B2B}
+.btn{min-height:48px;border-radius:14px;border:2px solid var(--p);background:var(--p);color:#fff;font:inherit;font-weight:700;padding:0 16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;transition:transform .1s,background .15s}
+.btn:active{transform:scale(.98)}
+.btn.sec{background:#fff;color:var(--p)}
+.btn:disabled{background:var(--s);border-color:var(--line);color:var(--m);cursor:not-allowed}
+.fld{display:flex;flex-direction:column;gap:6px}
+.fld label{font-weight:600;font-size:14px}
+.inp{display:flex;gap:8px;align-items:center}
+input[type=tel],input[type=password],input[type=text]{flex:1;min-height:48px;border:2px solid var(--line);border-radius:12px;padding:0 14px;font:inherit;color:var(--t);background:#fff;min-width:0}
+input[aria-invalid=true]{border-color:var(--err)}
+.er{display:flex;gap:6px;align-items:flex-start;font-size:14px;color:#9E2B2B;font-weight:600}
+.er b{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--err);color:#fff;font-size:12px;flex:none;margin-top:1px}
+.note{font-size:13px;color:var(--m)}
+.tabs{display:flex;border-top:1px solid var(--line);background:#fff}
+.tab{flex:1;min-height:56px;border:0;background:none;color:var(--m);font:inherit;font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer}
+.tab[aria-current=page]{color:var(--p);box-shadow:inset 0 3px 0 var(--p)}
+.opt{min-height:56px;border:2px solid var(--line);border-radius:14px;background:#fff;color:var(--t);font:inherit;font-weight:600;display:flex;align-items:center;gap:12px;padding:8px 14px;cursor:pointer;text-align:left;width:100%}
+.opt[aria-checked=true]{border-color:var(--p);background:var(--s)}
+.dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--m);flex:none;display:grid;place-items:center}
+[aria-checked=true] .dot{border-color:var(--p);background:var(--p);color:#fff}
+.seg{display:flex;gap:6px}
+.seg .opt{min-height:44px;justify-content:center;font-size:14px}
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:86%;padding:10px 14px;border-radius:16px;font-size:15px;white-space:pre-line}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+input::placeholder{color:var(--m);opacity:1}
+.msg.bot{background:var(--s);border-bottom-left-radius:4px;align-self:flex-start}
+.msg.me{background:var(--p);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.center{align-items:center;text-align:center;justify-content:center}
+.circle{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:var(--s)}
+dl{margin:0;width:100%;display:flex;flex-direction:column;gap:8px}
+dl div{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+dt{color:var(--m)}dd{margin:0;font-weight:700;text-align:right}
+</style>
+</head>
+<body>
+<div id="root" style="display:contents"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+const {useState,useRef,useEffect}=React;const h=React.createElement;
+const Ico=({d,size=22})=>h('svg',{width:size,height:size,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2.2,strokeLinecap:'round',strokeLinejoin:'round','aria-hidden':true},[].concat(d).map((x,i)=>h('path',{key:i,d:x})));
+const I={back:'M15 18l-6-6 6-6',check:'M5 13l4 4L19 7',x:'M6 6l12 12M18 6L6 18',home:['M3 11l9-8 9 8','M5 10v10h14V10'],card:['M3 6h18v12H3z','M3 10h18'],chat:'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z',wifi:['M2 8.8a15 15 0 0 1 20 0','M5 12.5a10 10 0 0 1 14 0','M8.5 16a5 5 0 0 1 7 0','M12 19.5h.01'],data:['M4 20V10','M10 20V4','M16 20v-7'],cal:['M4 5h16v15H4z','M4 10h16','M8 3v4','M16 3v4'],out:['M9 21H5V3h4','M16 17l5-5-5-5','M21 12H9']};
+const MXN='MXN 599',REF='DEMO-2026-001';
+const Top=({t,back})=>h('div',{className:'top'},back&&h('button',{className:'ib','aria-label':'Regresar',onClick:back},h(Ico,{d:I.back})),h('h1',null,t));
+const Btn=({v,...p})=>h('button',{className:'btn'+(v?' '+v:''),...p});
+const Err=({id,children})=>h('div',{className:'er',id,role:'alert'},h('b',{'aria-hidden':true},'!'),h('span',null,children));
+const Nav=({cur,go})=>h('nav',{className:'tabs','aria-label':'Principal'},[['home','Inicio',I.home],['pay','Pagar',I.card],['bot','Asistente',I.chat]].map(([k,l,d])=>h('button',{key:k,className:'tab','aria-current':cur===k?'page':undefined,onClick:()=>go(k)},h(Ico,{d}),l)));
+
+function Login({onOk}){
+  const[ph,setPh]=useState(''),[pw,setPw]=useState(''),[er,setEr]=useState({}),[show,setShow]=useState(false);
+  const fmt=d=>d.replace(/(\d{2})(\d{0,4})(\d{0,4})/,(m,a,b,c)=>[a,b,c].filter(Boolean).join(' '));
+  const submit=e=>{e.preventDefault();const n={};if(ph.length!==10)n.ph='Ingresa un número de 10 dígitos.';if(pw.length<6)n.pw='La contraseña debe tener al menos 6 caracteres.';setEr(n);if(!Object.keys(n).length)onOk()};
+  return h('form',{className:'body',onSubmit:submit,noValidate:true,style:{justifyContent:'center',gap:18}},
+    h('div',null,h('div',{className:'logo'},'NEXIA'),h('p',{style:{margin:'4px 0 0',color:'var(--m)',fontWeight:600}},'Tu internet, bajo control.')),
+    h('div',{className:'badge',style:{background:'var(--s)',color:'var(--t)'}},'Acceso de demostración'),
+    h('div',{className:'fld'},h('label',{htmlFor:'ph'},'Teléfono celular'),
+      h('div',{className:'inp'},h('span',{style:{fontWeight:700}},'+52'),h('input',{id:'ph',type:'tel',inputMode:'numeric',autoComplete:'tel-national',placeholder:'55 1234 5678',value:fmt(ph),'aria-invalid':!!er.ph,'aria-describedby':er.ph?'e1':undefined,onChange:e=>setPh(e.target.value.replace(/\D/g,'').slice(0,10))})),
+      er.ph&&h(Err,{id:'e1'},er.ph)),
+    h('div',{className:'fld'},h('label',{htmlFor:'pw'},'Contraseña'),
+      h('div',{className:'inp'},h('input',{id:'pw',type:show?'text':'password',autoComplete:'current-password',value:pw,'aria-invalid':!!er.pw,'aria-describedby':er.pw?'e2':undefined,onChange:e=>setPw(e.target.value)}),h('button',{type:'button',className:'ib',onClick:()=>setShow(!show),'aria-pressed':show},show?'Ocultar':'Mostrar')),
+      er.pw&&h(Err,{id:'e2'},er.pw)),
+    h(Btn,{type:'submit'},'Ingresar'),
+    h(Btn,{type:'button',v:'sec',onClick:()=>{setPh('5512345678');setPw('demo1234');setEr({})}},'Usar datos de prueba'),
+    h('p',{className:'note'},'Demostración: acepta cualquier teléfono de 10 dígitos y una contraseña de 6 o más caracteres. No se envía información a ningún servidor.'));
+}
+
+function Home({paid,go}){
+  return h(React.Fragment,null,
+    h('div',{className:'top'},h('div',{className:'logo s',style:{flex:1,paddingLeft:8}},'NEXIA'),h('button',{className:'ib','aria-label':'Cerrar sesión',onClick:()=>go('login')},h(Ico,{d:I.out}))),
+    h('div',{className:'body'},
+      h('h1',{style:{margin:0,fontSize:26}},'Hola, Alex'),
+      h('div',{className:'card hero'},h('span',{className:'lbl'},'Internet residencial'),h('div',{className:'row'},h('p',{className:'big'},'Servicio activo'),h(Ico,{d:I.wifi,size:30})),h('span',{className:'badge'},h(Ico,{d:I.check,size:16}),'Estado: Activo')),
+      h('div',{className:'card'},h('div',{className:'row'},h('span',{className:'lbl'},'Consumo del periodo'),h(Ico,{d:I.data})),h('p',{className:'big'},'125 GB'),h('span',{className:'note'},'Dato de demostración, solo referencial.')),
+      h('div',{className:'card w'},h('div',{className:'row'},h('span',{className:'lbl'},paid?'Pago del periodo':'Próximo pago'),h(Ico,{d:I.cal})),
+        paid?h(React.Fragment,null,h('span',{className:'badge',style:{background:'#E6F4EC'}},h(Ico,{d:I.check,size:16}),'Pagado'),h('span',{className:'note'},MXN+' · Ref. '+REF+' (simulación). Sin saldo pendiente.'))
+        :h(React.Fragment,null,h('p',{className:'big'},MXN),h('span',{className:'note'},'Vence el 30 de noviembre de 2026'))),
+      h(Btn,{onClick:()=>go('pay'),disabled:paid},paid?'Pago al corriente':'Pagar ahora'),
+      h(Btn,{v:'sec',onClick:()=>go('bot')},'Resolver problema')),
+    h(Nav,{cur:'home',go}));
+}
+
+function Pay({paid,meth,setMeth,sim,setSim,busy,confirm,go}){
+  const M=[['card','Tarjeta de demostración •••• 4242'],['spei','Transferencia SPEI (simulada)']];
+  return h(React.Fragment,null,h(Top,{t:'Pagar',back:()=>go('home')}),
+    h('div',{className:'body'},
+      h('div',{className:'card'},h('span',{className:'lbl'},'Resumen'),h('div',{className:'row'},h('b',null,'Internet residencial NEXIA'),h(Ico,{d:I.wifi})),h('span',{className:'note'},'Periodo con vencimiento 30 de noviembre de 2026'),h('p',{className:'big'},MXN)),
+      h('div',{role:'radiogroup','aria-label':'Método de pago',style:{display:'flex',flexDirection:'column',gap:8}},h('span',{className:'lbl'},'Método de pago (simulado)'),
+        M.map(([k,l])=>h('button',{key:k,type:'button',role:'radio','aria-checked':meth===k,className:'opt',onClick:()=>setMeth(k)},h('span',{className:'dot'},meth===k&&h(Ico,{d:I.check,size:12})),l))),
+      h('p',{className:'note'},'No se capturan datos bancarios reales ni se realiza ninguna transacción.'),
+      paid&&h('div',{className:'badge'},h(Ico,{d:I.check,size:16}),'Este periodo ya está pagado (simulación)'),
+      h(Btn,{onClick:confirm,disabled:busy||paid},busy?'Procesando…':'Confirmar pago'),
+      h('div',{style:{marginTop:'auto',borderTop:'1px dashed var(--line)',paddingTop:10}},h('span',{className:'note'},'Control de demostración: resultado simulado'),
+        h('div',{className:'seg',role:'radiogroup','aria-label':'Resultado simulado',style:{marginTop:6}},[['ok','Pago exitoso'],['fail','Pago rechazado']].map(([k,l])=>h('button',{key:k,type:'button',role:'radio','aria-checked':sim===k,className:'opt',onClick:()=>setSim(k)},l))))),
+    h(Nav,{cur:'pay',go}));
+}
+
+const ASK='¿Ya tienes internet?';
+const Q={start:'¿Con qué te ayudo?',scope:'¿La falla ocurre en todos tus dispositivos o solo en uno?',check:ASK,persist:'¿Quieres solicitar soporte simulado?'};
+const OPT={start:[['No tengo internet','start']],scope:[['En todos mis dispositivos','all'],['Solo en un dispositivo','one']],check:[['Sí, ya tengo internet','yes'],['Sigue sin internet','no']],persist:[['Solicitar soporte (simulado)','esc'],['No por ahora','later']],end:[['Volver al inicio','home']]};
+const STEP={
+  start:{b:['Lamento que no tengas conexión. Vamos paso a paso.',Q.scope],st:'scope'},
+  all:{b:['Entendido: falla en todos tus dispositivos. Revisemos el router.','1. Verifica que esté conectado a la corriente y encendido.\n2. Mira sus luces: busca alguna apagada, roja o con parpadeo distinto al habitual.\n3. Revisa que los cables estén bien insertados, sin forzarlos.\n4. Si todo se ve normal, desconéctalo de la corriente 30 segundos, vuelve a conectarlo y espera unos 5 minutos.\nNo abras ni manipules el interior del equipo.',ASK],st:'check'},
+  one:{b:['Entendido: falla solo en un dispositivo. Probemos en ese equipo.','1. Activa el Wi-Fi y desactiva el modo avión.\n2. Confirma que estás en tu red Wi-Fi y no en otra cercana.\n3. Acércate al router y reinicia el dispositivo.\n4. Si sigue igual, olvida la red Wi-Fi y vuelve a conectarte con tu contraseña.',ASK],st:'check'},
+  yes:{b:['Qué bueno, me alegra que ya tengas internet. Cierro este diagnóstico guiado de demostración. Si vuelve a fallar, aquí estaré.'],st:'end'},
+  no:{b:['Gracias por probar. Te recomiendo:\n• Esperar unos 10 minutos tras reiniciar el router.\n• Probar con otro dispositivo.\n• Anotar qué luces ves en el router y desde cuándo falla.','Puedes solicitar soporte, pero es una simulación. '+Q.persist],st:'persist'},
+  later:{b:['Sin problema. Puedes solicitarlo cuando quieras o reiniciar el diagnóstico.',Q.persist],st:'persist'},
+  esc:{b:['Listo, registré tu solicitud como simulación. En este prototipo no se crea un ticket real, no se contacta a nadie ni se hace ninguna reparación remota.'],st:'end'}
+};
+const INIT=[{r:'bot',t:'Hola, soy el asistente de NEXIA. Este es un diagnóstico guiado de demostración: no reviso tu red ni hago cambios de forma remota.'},{r:'bot',t:Q.start}];
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+const parse=(st,t)=>{const s=norm(t);
+  if(st==='start')return /\b(no|sin)\b.*\b(internet|conexion|wifi|red)\b|\b(internet|wifi)\b.*\b(falla|caido|no)\b|\bno (hay|funciona|carga|puedo|navega)\b|\bfalla\b|\bcaid[oa]\b/.test(s)?'start':null;
+  if(st==='scope'){
+    if(/\b(solo|solamente|unicamente|uno|una)\b|\bun (solo )?(dispositivo|equipo|aparato)\b/.test(s))return 'one';
+    if(/\b(todos|todas|ninguno|ninguna|ambos|dispositivos)\b/.test(s))return 'all';
+    if(/\bmi (celular|cel|telefono|movil|laptop|compu|computadora|tablet|tele|television)\b/.test(s))return 'one';
+    return null}
+  if(st==='check'){
+    if(/\b(sigue|persiste|todavia|aun)\b|\bsin (internet|conexion)\b|\bno (me |se )?(funciona|hay|tengo|volvio|regreso|sirve|carga|conecta|conecto|resolvio)\b|\bnada\b|\bigual\b|^(no|nel|nop)$/.test(s))return 'no';
+    if(/^(si|sip|claro|listo|ok|ya)$|\b(funciona|resuelto|solucionado|volvio|regreso|conectado)\b|\bya (tengo|hay|esta|quedo|puedo|se)\b|\bsi (tengo|funciona|ya)\b/.test(s))return 'yes';
+    return null}
+  if(st==='persist'){
+    if(/^(no|nel|nop)$|\bno gracias\b|\bpor ahora\b|\bdespues\b|\bluego\b|\bno quiero\b/.test(s))return 'later';
+    if(/\b(soporte|ayuda|contacto|solicit\w*|agente|asesor|si|claro|ok|quiero|dale|favor)\b/.test(s))return 'esc';
+    return null}
+  return null};
+function Bot({go}){
+  const[m,setM]=useState(INIT),[st,setSt]=useState('start'),[tx,setTx]=useState(''),end=useRef(null);
+  useEffect(()=>{end.current&&end.current.scrollIntoView({block:'end'})},[m]);
+  const reset=()=>{setM(INIT);setSt('start');setTx('')};
+  const run=(label,k)=>{if(k==='home')return go('home');const S=STEP[k];setM(x=>[...x,{r:'me',t:label},...S.b.map(t=>({r:'bot',t}))]);setSt(S.st)};
+  const send=e=>{e.preventDefault();const t=tx.trim();if(!t)return;setTx('');
+    if(/reinici|empezar de nuevo|nuevo diagnostico/.test(norm(t)))return reset();
+    const k=parse(st,t);
+    if(k)run(t,k);else setM(x=>[...x,{r:'me',t},{r:'bot',t:'No logré entender tu respuesta. Elige una opción o escríbela de otra forma.'},{r:'bot',t:Q[st]||''}].filter(y=>y.t))};
+  return h(React.Fragment,null,h(Top,{t:'Asistente NEXIA',back:()=>go('home')}),
+    h('div',{className:'body'},h('span',{className:'note'},'Simulación de diagnóstico guiado. No analiza tu red real.'),
+      h('div',{className:'chat',role:'log','aria-live':'polite'},m.map((x,i)=>h('div',{key:i,className:'msg '+x.r},x.t))),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:8}},OPT[st].map(x=>h('button',{key:x[1],className:'opt',onClick:()=>run(x[0],x[1])},x[0])),
+        m.length>INIT.length&&h('button',{className:'btn sec',onClick:reset},'Reiniciar diagnóstico')),h('div',{ref:end})),
+    st!=='end'&&h('form',{onSubmit:send,style:{display:'flex',gap:8,padding:'8px 20px 12px',borderTop:'1px solid var(--line)'}},
+      h('label',{htmlFor:'bt',className:'sr'},'Escribe tu respuesta'),
+      h('input',{id:'bt',type:'text',autoComplete:'off',placeholder:'Escribe tu respuesta…',value:tx,onChange:e=>setTx(e.target.value)}),
+      h('button',{type:'submit',className:'btn',style:{width:'auto',minWidth:96},disabled:!tx.trim()},'Enviar')),
+    h(Nav,{cur:'bot',go}));
+}
+
+function Result({ok,meth,go}){
+  const col=ok?'var(--ok)':'var(--err)';
+  return h('div',{className:'body center',style:{gap:16}},
+    h('div',{className:'circle',style:{color:col}},h(Ico,{d:ok?I.check:I.x,size:44})),
+    h('h1',{style:{margin:0,fontSize:24},role:'status'},ok?'Pago registrado correctamente (simulación)':'No pudimos procesar tu pago'),
+    h('p',{style:{margin:0,color:'var(--m)'}},ok?'Tu servicio sigue activo. Este registro es solo una demostración.':'La operación simulada no se completó.'),
+    h('div',{className:'card',style:{width:'100%'}},h('dl',null,
+      h('div',null,h('dt',null,'Importe'),h('dd',null,MXN)),
+      ok?h('div',null,h('dt',null,'Referencia'),h('dd',null,REF)):h('div',null,h('dt',null,'Estado'),h('dd',null,'No pagado')),
+      h('div',null,h('dt',null,'Método'),h('dd',null,meth)))),
+    !ok&&h(Btn,{onClick:()=>go('pay')},'Intentar nuevamente'),
+    h(Btn,{v:ok?undefined:'sec',onClick:()=>go('home')},'Volver al inicio'));
+}
+
+function App(){
+  const[s,setS]=useState('login'),[paid,setPaid]=useState(false),[sim,setSim]=useState('ok'),[meth,setMeth]=useState('card'),[busy,setBusy]=useState(false);
+  const ML={card:'Tarjeta •••• 4242 (demo)',spei:'SPEI (simulado)'};
+  const confirm=()=>{setBusy(true);setTimeout(()=>{setBusy(false);if(sim==='ok'){setPaid(true);setS('ok')}else setS('fail')},900)};
+  let v;
+  if(s==='login')v=h(Login,{onOk:()=>setS('home')});
+  else if(s==='home')v=h(Home,{paid,go:setS});
+  else if(s==='pay')v=h(Pay,{paid,meth,setMeth,sim,setSim,busy,confirm,go:setS});
+  else if(s==='bot')v=h(Bot,{go:setS});
+  else v=h(Result,{ok:s==='ok',meth:ML[meth],go:setS});
+  return h('div',{id:'app'},h('div',{key:s,className:'scr'},v));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+</script>
+</body>
+</html>
