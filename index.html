@@ -55,11 +55,15 @@ input[aria-invalid=true]{border-color:var(--err)}
 .seg{display:flex;gap:6px}
 .seg .opt{min-height:44px;justify-content:center;font-size:14px}
 .chat{display:flex;flex-direction:column;gap:10px}
-.msg{max-width:86%;padding:10px 14px;border-radius:16px;font-size:15px;white-space:pre-line}
+.msg{max-width:86%;padding:11px 15px;border-radius:18px;font-size:15px;line-height:1.45;white-space:pre-line;box-shadow:0 1px 2px rgba(16,43,80,.08)}
+.mrow{display:flex;align-items:flex-end;gap:8px;align-self:flex-start;max-width:92%}
+.mrow .msg{max-width:none}
+.av{width:32px;height:32px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 0 0 3px var(--s)}
+.av.gh{visibility:hidden}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 input::placeholder{color:var(--m);opacity:1}
-.msg.bot{background:var(--s);border-bottom-left-radius:4px;align-self:flex-start}
-.msg.me{background:var(--p);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.msg.bot{background:var(--s);border:1px solid #D3E4FB;border-bottom-left-radius:6px;align-self:flex-start}
+.msg.me{background:var(--p);color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
 .center{align-items:center;text-align:center;justify-content:center}
 .circle{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:var(--s)}
 dl{margin:0;width:100%;display:flex;flex-direction:column;gap:8px}
@@ -170,7 +174,7 @@ function Bot({go}){
     if(k)run(t,k);else setM(x=>[...x,{r:'me',t},{r:'bot',t:'No logré entender tu respuesta. Elige una opción o escríbela de otra forma.'},{r:'bot',t:Q[st]||''}].filter(y=>y.t))};
   return h(React.Fragment,null,h(Top,{t:'Asistente NEXIA',back:()=>go('home')}),
     h('div',{className:'body'},h('span',{className:'note'},'Simulación de diagnóstico guiado. No analiza tu red real.'),
-      h('div',{className:'chat',role:'log','aria-live':'polite'},m.map((x,i)=>h('div',{key:i,className:'msg '+x.r},x.t))),
+      h('div',{className:'chat',role:'log','aria-live':'polite'},m.map((x,i)=>x.r==='bot'?h('div',{key:i,className:'mrow'},h('span',{className:'av'+(m[i-1]&&m[i-1].r==='bot'?' gh':''),'aria-hidden':true},h(Ico,{size:16,d:['M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z','M19 16v4','M17 18h4']})),h('div',{className:'msg bot'},x.t)):h('div',{key:i,className:'msg me'},x.t))),
       h('div',{style:{display:'flex',flexDirection:'column',gap:8}},OPT[st].map(x=>h('button',{key:x[1],className:'opt',onClick:()=>run(x[0],x[1])},x[0])),
         m.length>INIT.length&&h('button',{className:'btn sec',onClick:reset},'Reiniciar diagnóstico')),h('div',{ref:end})),
     st!=='end'&&h('form',{onSubmit:send,style:{display:'flex',gap:8,padding:'8px 20px 12px',borderTop:'1px solid var(--line)'}},
